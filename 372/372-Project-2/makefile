@@ -1,0 +1,86 @@
+CXXFLAGS=-std=c++14
+CMP=g++ -std=c++14 -Wall
+
+BUILD_DIR = build
+COMPLEXSHAPES = ComplexShapes
+CPS = cps
+TESTS = cps_test_suites
+MAIN = main
+SHAPE = Shape
+SIMPLESHAPES = SimpleShapes
+TESTMAIN = testmain
+UNIQUESHAPES = UniqueShapes
+
+
+COMPLEXSHAPES_OBJ=$(BUILD_DIR)/$(COMPLEXSHAPES).o
+CPS_OBJ=$(BUILD_DIR)/$(CPS).o
+MAIN_OBJ=$(BUILD_DIR)/$(MAIN).o
+SHAPE_OBJ=$(BUILD_DIR)/$(SHAPE).o
+SIMPLESHAPES_OBJ=$(BUILD_DIR)/$(SIMPLESHAPES).o
+TESTMAIN_OBJ=$(BUILD_DIR)/$(TESTMAIN).o
+TESTS_OBJ=$(BUILD_DIR)/$(TESTS).o
+UNIQUESHAPES_OBJ=$(BUILD_DIR)/$(UNIQUESHAPES).o
+
+OBJ_FILES=$(SHAPE_OBJ) $(CPS_OBJ) $(SIMPLESHAPES_OBJ) $(COMPLEXSHAPES_OBJ)\
+		  $(UNIQUESHAPES_OBJ)
+
+CPP_FILES=$(CPS).cpp $(SHAPE).cpp $(SIMPLESHAPES).cpp $(COMPLEXSHAPES).cpp \
+		  $(UNIQUESHAPES).cpp
+
+OBJ_FILES_WITH_MAIN=$(OBJ_FILES) $(MAIN_OBJ)
+
+OUT_FILE= psTranslator.out
+
+TEST_OUT_FILE=tests.out
+
+all: $(TEST_OUT_FILE) $(OUT_FILE) 
+
+cps_main: $(OUT_FILE)
+
+$(OUT_FILE): $(OBJ_FILES_WITH_MAIN)
+	$(CMP) -o $(OUT_FILE) $(OBJ_FILES_WITH_MAIN)
+
+$(COMPLEXSHAPES_OBJ): $(COMPLEXSHAPES).cpp
+	$(CMP) -o $(COMPLEXSHAPES_OBJ) -c $(COMPLEXSHAPES).cpp
+
+$(CPS_OBJ): $(CPS).cpp
+	$(CMP) -o $(CPS_OBJ) -c $(CPS).cpp
+
+$(MAIN_OBJ): $(MAIN).cpp
+	$(CMP) -o $(MAIN_OBJ) -c $(MAIN).cpp
+
+$(SHAPE_OBJ): $(SHAPE).cpp
+	$(CMP) -o $(SHAPE_OBJ) -c $(SHAPE).cpp
+
+$(SIMPLESHAPES_OBJ): $(SIMPLESHAPES).cpp
+	$(CMP) -o $(SIMPLESHAPES_OBJ) -c $(SIMPLESHAPES).cpp
+
+$(UNIQUESHAPES_OBJ): $(UNIQUESHAPES).cpp
+	$(CMP) -o $(UNIQUESHAPES_OBJ) -c $(UNIQUESHAPES).cpp
+
+$(TESTMAIN_OBJ): $(TESTMAIN).cpp
+	$(CMP) -o $(TESTMAIN_OBJ) -c $(TESTMAIN).cpp
+
+$(TESTS_OBJ): $(TESTS).cpp
+	$(CMP) -o $(TESTS_OBJ) -c $(TESTS).cpp
+
+
+#For making and running tests
+
+
+
+TEST_OBJ_FILES=$(TESTMAIN_OBJ) $(OBJ_FILES) $(TESTS_OBJ)
+
+tests: $(TEST_OUT_FILE)
+
+$(TEST_OUT_FILE): $(TEST_OBJ_FILES)
+	$(CMP) -o $(TEST_OUT_FILE) $(TEST_OBJ_FILES)
+
+tests-run: tests
+	./$(TEST_OUT_FILE) $1
+
+run: cps_main
+	./$(OUT_FILE)
+
+clean:
+	rm $(MAIN_OBJ) $(TESTMAIN_OBJ) $(OBJ_FILES) $(TESTS_OBJ) *.out ps.ps

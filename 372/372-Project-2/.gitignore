@@ -1,0 +1,4 @@
+*.out
+*.ps
+build/*.o
+.vscode/*
